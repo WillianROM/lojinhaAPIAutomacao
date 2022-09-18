@@ -8,9 +8,7 @@ import static org.hamcrest.Matchers.*;
 import dataFactory.ProdutoDataFactory;
 import dataFactory.UsuarioDataFactory;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 
 @DisplayName("Testes de API Rest do modulo de Produto")
@@ -74,6 +72,29 @@ public class ProdutoTest {
                     .body("error", equalTo("O valor do produto deve estar entre R$ 0,01 e R$ 7.000,00"))
                     .statusCode(422);
 
+    }
+
+    @Test
+    @DisplayName("Validar a busca de todos os produtos do usuário")
+    public void testValidarBuscaTodosProdutosUsuario(){
+        String responseString =   given()
+                .header("token", this.token)
+        .when()
+                .get("/v2/produtos?produtoNome=smart")
+        .then()
+                .extract()
+                .asString();
+
+        Assertions.assertNotNull(responseString);
+
+        given()
+                .header("token", this.token)
+        .when()
+                .get("/v2/produtos?produtoNome=smart")
+        .then()
+                .statusCode(200);
+
+        System.out.println(responseString);
     }
 
 }
